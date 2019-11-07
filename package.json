@@ -1,0 +1,38 @@
+{
+  "name": "techlink-app-nodeapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec babel-node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.4.13",
+    "axios": "^0.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "extract-zip": "^1.6.7",
+    "fs": "0.0.1-security",
+    "jsonwebtoken": "^8.5.1",
+    "libxmljs": "^0.19.7",
+    "mysql2": "^1.7.0",
+    "node-schedule": "^1.3.2",
+    "password-hash": "^1.2.2",
+    "sequelize": "^5.18.4",
+    "unzip": "^0.1.11",
+    "xml2js": "^0.4.22",
+    "xml2json": "^0.11.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.2",
+    "nodemon": "^1.18.10",
+    "ws": "3.3.2"
+  }
+}
