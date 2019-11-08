@@ -4,7 +4,7 @@ import buildResponse from "../libs/response-lib"
 
 const router = Router();
 
-router.post('/token', (req,res) => {
+router.post('/token', async (req,res) => {
     // refresh the damn token
     const postData = req.body
     // if refresh token exists

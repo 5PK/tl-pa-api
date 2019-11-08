@@ -5,8 +5,8 @@ import bodyParser from "body-parser"
 import routes from "./routes"
 import models, { sequelize } from './models'
 import { createSeed, generateHashPassword } from "./libs/password-hash-lib" 
-import { downloadZip } from "./libs/patent-alert-lib"
-import schedule from 'node-schedule'
+//import { downloadZip } from "./libs/patent-alert-lib"
+//import schedule from 'node-schedule'
 
 const PORT = process.env.SERVER_PORT || 3000;
 
