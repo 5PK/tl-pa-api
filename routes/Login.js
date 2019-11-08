@@ -11,6 +11,16 @@ const router = Router();
 
 router.post("/", async (req, res) => {
 
+  console.log("login attempt")
+  console.log(req.body.email)
+
+  if(req.body.email == null || req.body.password == null){
+    return res.send(
+      failure(
+        "undefined values"
+      ))
+  }
+
   const result = await models.User.findAll({
     where: {
       email: req.body.email
@@ -19,7 +29,7 @@ router.post("/", async (req, res) => {
 
   if (result === null || result.length == !1) {
 
-    res.send(
+    return res.send(
       failure(
         "User not Found! If this is an unexpected error, contact the sys-admin"
       )
@@ -30,7 +40,7 @@ router.post("/", async (req, res) => {
     if (
       !verifyHashPassword(req.body.password + user.seed, user.hashedPassword)
     ) {
-      res.send(unauthorized("Password Incorrect!"));
+      return res.send(unauthorized("Password Incorrect!"));
     } else {
       const jwtBody = {
         email: user.email,
@@ -54,14 +64,14 @@ router.post("/", async (req, res) => {
       // If no tokens, create one
       if (tokenCount == 0) {
         await createToken(user.id);
-        res.send(success(response));
+        return res.send(success(response));
 
         // If token exists,
       } else if (tokenCount == 1) {
         await updateToken(user.id);
-        res.send(success(response));
+        return res.send(success(response));
       } else {
-        res.send(unauthorized("unauthorized"));
+        return res.send(unauthorized("unauthorized"));
       }
     }
   }
