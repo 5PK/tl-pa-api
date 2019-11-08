@@ -9,7 +9,7 @@ import { createSeed, generateHashPassword } from "./libs/password-hash-lib"
 //import { downloadZip } from "./libs/patent-alert-lib"
 //import schedule from 'node-schedule'
 
-const PORT = process.env.SERVER_PORT || 3000;
+const PORT = process.env.PORT || process.env.SERVER_PORT ;
 
 const app = express()
 
