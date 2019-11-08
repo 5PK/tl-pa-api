@@ -3,8 +3,6 @@ const Axios = require('axios')
 const Path = require('path')
 const AdmZip = require('adm-zip');
 const parseString = require('xml2js').parseString;
-const libxmljs = require("libxmljs");
-let xmlParser = require('xml2json');
 
 export async function downloadZip(){
 

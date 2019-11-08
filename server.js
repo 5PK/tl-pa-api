@@ -8,6 +8,8 @@ import { createSeed, generateHashPassword } from "./libs/password-hash-lib"
 import { downloadZip } from "./libs/patent-alert-lib"
 import schedule from 'node-schedule'
 
+const PORT = process.env.SERVER_PORT || 3000;
+
 const app = express()
 
 // Then use it before your routes are set up:
@@ -22,6 +24,11 @@ app.use("/register", routes.register)
 app.use("/login", routes.login)
 app.use("/client", routes.client)
 app.use('/alert', routes.alert);
+
+app.get("/", function(req, res) {
+  //when we get an http get request to the root/homepage
+  res.send("Hello World");
+});
 
 const eraseDatabaseOnSync = true;
 
@@ -38,8 +45,8 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
       createUsersWithClients()
     }
 
-    app.listen(process.env.SERVER_PORT, () =>
-        console.log(`***** Techlink-API-DEV listening on port ${process.env.SERVER_PORT}! *****`),
+    app.listen(PORT, () =>
+        console.log(`***** Techlink-API-DEV listening on port ${PORT}! *****`),
     );
 });
 
