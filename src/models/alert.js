@@ -3,7 +3,6 @@ const alert = (sequelize, DataTypes) => {
       "bx3_alert",
       {
         name: DataTypes.STRING,
-        contacts: DataTypes.STRING,
         isActive: DataTypes.BOOLEAN,
         query: DataTypes.STRING
       },

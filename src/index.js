@@ -1,30 +1,30 @@
-import "dotenv/config"
-import '@babel/polyfill'
-import cors from 'cors'
-import express from "express"
-import bodyParser from "body-parser"
-import routes from "./routes"
-import models, { sequelize } from './models'
-import { createSeed, generateHashPassword } from "./libs/password-hash-lib" 
+import "dotenv/config";
+import "@babel/polyfill";
+import cors from "cors";
+import express from "express";
+import bodyParser from "body-parser";
+import routes from "./routes";
+import models, { sequelize } from "./models";
+import { createSeed, generateHashPassword } from "./libs/password-hash-lib";
 //import { downloadZip } from "./libs/patent-alert-lib"
 //import schedule from 'node-schedule'
 
-const PORT = process.env.PORT || process.env.SERVER_PORT ;
+const PORT = process.env.PORT || process.env.SERVER_PORT;
 
-const app = express()
+const app = express();
 
 // Then use it before your routes are set up:
 app.use(cors());
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //app.use('/session', routes.session);
-app.use("/register", routes.register)
-app.use("/login", routes.login)
-app.use("/client", routes.client)
-app.use('/alert', routes.alert);
+app.use("/register", routes.register);
+app.use("/login", routes.login);
+app.use("/client", routes.client);
+app.use("/alert", routes.alert);
+app.use("/contact", routes.contact);
 
 app.get("/", function(req, res) {
   //when we get an http get request to the root/homepage
@@ -33,33 +33,28 @@ app.get("/", function(req, res) {
 
 const eraseDatabaseOnSync = true;
 
-
-
 //var j = schedule.scheduleJob('*/1 * * * *', function(){
 //  downloadZip()
 //  console.log('Today is recognized by Kevin Tran!');
 //});
 
-
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
-    if (eraseDatabaseOnSync) {
-      createUsersWithClients()
-    }
+  if (eraseDatabaseOnSync) {
+    createUsersWithClients();
+  }
 
-    app.listen(PORT, () =>
-        console.log(`***** Techlink-API-DEV listening on port ${PORT}! *****`),
-    );
+  app.listen(PORT, () =>
+    console.log(`***** Techlink-API-DEV listening on port ${PORT}! *****`)
+  );
 });
 
 const createUsersWithClients = async () => {
+  const seed = 5;
 
-  const seed = 5
-  
-  const hashedPassword = generateHashPassword("Passw0rd!" + seed)
+  const hashedPassword = generateHashPassword("Passw0rd!" + seed);
 
-  console.log(seed)
-  console.log("******  " + hashedPassword + "  ******")
-
+  console.log(seed);
+  console.log("******  " + hashedPassword + "  ******");
 
   await models.User.create(
     {
@@ -75,7 +70,6 @@ const createUsersWithClients = async () => {
           aso: "testASO@aso.com",
           isVerified: true,
           primaryContact: "contact@contact.contact"
-  
         },
         {
           name: "Contoso",
@@ -93,37 +87,46 @@ const createUsersWithClients = async () => {
           name: "Mircrosoft",
           aso: "testASO@Mircrosoft.com",
           isVerified: true,
-          primaryContact: "contact@contact.contact",
-
+          primaryContact: "contact@contact.contact"
         }
       ]
     },
     {
       include: [models.Client]
     }
-  )
+  );
 
-  await models.Alert.create(
-  {
+  await models.Alert.create({
     name: "alert1",
-    contacts: "contact1",
     isActive: true,
     bx3ClientId: 1
-  },
-
-)
+  });
   await models.Alert.create(
     {
       name: "alert2",
-      contacts: "contact1",
       isActive: true,
       bx3ClientId: 1
     },
     {
       include: [models.Client]
     }
-  )
+  );
 
-
-
-}
+  await models.Contact.create({
+    firstName: "Esteve",
+    lastName: "Jones",
+    email: "ejones@email.com",
+    bx3ClientId: 1
+  });
+  await models.Contact.create(
+    {
+      firstName: "Nityan",
+      lastName: "Theman",
+      email: "Nityan@Theman.com",
+      bx3ClientId: 1
+    },
+    {
+      include: [models.Client]
+    }
+  );
+};

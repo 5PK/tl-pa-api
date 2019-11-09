@@ -4,7 +4,8 @@ const models = {
   User: sequelize.import('./user'),
   Client: sequelize.import('./client'),
   Token: sequelize.import('./token'),
-  Alert: sequelize.import('./alert')
+  Alert: sequelize.import('./alert'),
+  Contact: sequelize.import('./contact')
 };
 
 Object.keys(models).forEach(key => {
