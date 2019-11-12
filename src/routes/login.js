@@ -64,12 +64,12 @@ router.post("/", async (req, res) => {
       // If no tokens, create one
       if (tokenCount == 0) {
         await createToken(user.id);
-        return res.send(success(response));
+        return res.send(success("User Login Success!", response));
 
         // If token exists,
       } else if (tokenCount == 1) {
         await updateToken(user.id);
-        return res.send(success(response));
+        return res.send(success("User Login Success!", response));
       } else {
         return res.send(unauthorized("unauthorized"));
       }

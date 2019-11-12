@@ -40,7 +40,7 @@ const eraseDatabaseOnSync = true;
 
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   if (eraseDatabaseOnSync) {
-    createUsersWithClients();
+    seedDatabase();
   }
 
   app.listen(PORT, () =>
@@ -48,7 +48,7 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   );
 });
 
-const createUsersWithClients = async () => {
+const seedDatabase = async () => {
   const seed = 5;
 
   const hashedPassword = generateHashPassword("Passw0rd!" + seed);
@@ -67,27 +67,27 @@ const createUsersWithClients = async () => {
       bx3_clients: [
         {
           name: "Evenica",
-          aso: "testASO@aso.com",
+          aso: "JimJeffries@aso.com",
           isVerified: true,
-          primaryContact: "contact@contact.contact"
+          primaryContact: "Jack@evenica.com"
         },
         {
           name: "Contoso",
-          aso: "testASO@Contoso.com",
+          aso: "HannibalBarca@alps.com",
           isVerified: true,
-          primaryContact: "contact@contact.contact"
+          primaryContact: "JenniferNguyen@contoso.com"
         },
         {
           name: "Google",
-          aso: "testASO@Google.com",
+          aso: "Alexender@thegreat.com",
           isVerified: true,
-          primaryContact: "contact@contact.contact"
+          primaryContact: "ceo@gmail.com"
         },
         {
-          name: "Mircrosoft",
-          aso: "testASO@Mircrosoft.com",
-          isVerified: true,
-          primaryContact: "contact@contact.contact"
+          name: "Microsoft",
+          aso: "TimothyT@gmail.com",
+          isVerified: false,
+          primaryContact: "Mike@gmail.com"
         }
       ]
     },

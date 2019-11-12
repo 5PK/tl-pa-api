@@ -2,10 +2,9 @@ const contact = (sequelize, DataTypes) => {
     const Contact = sequelize.define(
       "bx3_contact",
       {
-        name: DataTypes.STRING,
-        contacts: DataTypes.STRING,
-        isActive: DataTypes.BOOLEAN,
-        query: DataTypes.STRING
+        firstName: DataTypes.STRING,
+        lastName: DataTypes.STRING,
+        email: DataTypes.STRING
       },
       {
         timestamps: true

@@ -24,11 +24,11 @@ router.get("/", async (req, res) => {
 
   if (alerts == null || alerts == "" || alerts == ''){
     console.log("0")
-    return res.send(failure('Alerts not Found!'));
+    return res.send(failure('Alerts not Found!', alerts));
   }else{
     console.log("1")
     console.log(alerts)
-    return res.send(success(alerts))
+    return res.send(success('Alerts Found!',alerts))
   }
 })
 
