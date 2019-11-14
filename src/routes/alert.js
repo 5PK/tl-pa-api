@@ -49,16 +49,24 @@ router.get("/:alertId", async (req, res) => {
 router.post("/", async (req, res) => {
   console.log("ALERT: _______POST_______")
   console.log(req.body.name)
+
+  console.log(req.body)
+
   const alert = await models.Alert.create({
     name: req.body.name,
-    contacts: req.body.contacts,
+    contacts: JSON.stringify(req.body.contacts),
     isActive: true,
-    query: req.body.query,
+    query: JSON.stringify(req.body.query),
     bx3ClientId: req.body.clientId,
-    bx3UserId: req.decoded.userId
   })
 
-  return res.send(alert)
+  console.log(alert)
+
+  if (alert == null || alert == "" || alert == ''){
+    return res.send(failure('Failed to Add!', alert));
+  }else{
+    return res.send(success('Alert Added!', alert));
+  }
 })
 
 router.put("/:alertId", async (req, res) => {

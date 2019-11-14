@@ -2,6 +2,7 @@ import uuidv4 from "uuid/v4"
 import { Router } from "express"
 import models from "../models";
 import { unauthorized, success, failure } from "../libs/response-lib";
+//import { Json } from "sequelize/types/lib/utils";
 
 
 const router = Router()
@@ -16,32 +17,11 @@ router.get("/", async (req, res) => {
   const clients = await models.Client.findAll({
     where: {
       bx3UserId: req.decoded.userId
-    }
+    },
+    include: [
+      {model: models.Alert}
+   ]
   });
-
-  //console.log(clients);
-
-  clients.forEach(async client => {
-    
-    
-    console.log("//////////////////////////////////////////////////////////////");
-
-    //console.log(client);
-
-    const alerts = await models.Alert.findAll({
-      where:{
-        bx3ClientId: client.dataValues.id
-      }
-    });
-    console.log("##########################")
-    //console.log(alerts);
-
-    client.dataValues.alerts = alerts;
-
-
-  });
-
-  //console.log(clients);
 
   return res.send(success('Clients Found', clients))
 })
@@ -90,7 +70,6 @@ router.post("/", async (req, res) => {
   }else{
     return res.send(success('Client Added!', client));
   }
-
 })
 
 router.put("/:clientId", async (req, res) => {

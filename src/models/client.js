@@ -14,6 +14,7 @@ const client = (sequelize, DataTypes) => {
 
   Client.associate = models => {
     Client.belongsTo(models.User, { foreignKey: "bx3UserId" });
+    Client.hasMany(models.Alert, { onDelete: 'CASCADE' }, { foreignKey: 'bx3ClientId' });
   };
 
   return Client;

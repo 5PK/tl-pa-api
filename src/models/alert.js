@@ -4,7 +4,8 @@ const alert = (sequelize, DataTypes) => {
       {
         name: DataTypes.STRING,
         isActive: DataTypes.BOOLEAN,
-        query: DataTypes.STRING
+        query: DataTypes.TEXT,
+        contacts: DataTypes.TEXT,
       },
       {
         timestamps: true
