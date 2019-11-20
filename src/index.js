@@ -25,6 +25,7 @@ app.use("/login", routes.login);
 app.use("/client", routes.client);
 app.use("/alert", routes.alert);
 app.use("/contact", routes.contact);
+app.use("/aso", routes.aso);
 
 app.get("/", function(req, res) {
   //when we get an http get request to the root/homepage
@@ -105,7 +106,7 @@ const seedDatabase = async () => {
   await models.Alert.create(
     {
       name: "alert2",
-      isActive: true,
+      isActive: false,
       bx3ClientId: 1
     },
     {

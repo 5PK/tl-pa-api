@@ -32,20 +32,7 @@ router.get("/", async (req, res) => {
   }
 })
 
-/*
-router.get("/:alertId", async (req, res) => {
-  const alert = await models.Alert.findById(
-    req.params.alertId,
-    {
-      where: {
-        bx3AlertId: req.decoded.alertId,
 
-      }
-    }
-  )
-  return res.send(alert)
-})
-*/
 router.post("/", async (req, res) => {
   console.log("ALERT: _______POST_______")
   console.log(req.body.name)

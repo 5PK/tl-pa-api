@@ -5,8 +5,6 @@ import jwt from 'jsonwebtoken'
 
 module.exports = (req,res,next) => {
 
-
-
   console.log("=========================================")
   console.log(req.headers.jwt)
   console.log("=========================================")

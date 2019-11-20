@@ -40,6 +40,8 @@ export async function downloadZip(){
                         var obj = result
                         var patentArr = obj["us-patent-assignments"]["patent-assignments"][0]["patent-assignment"]
 
+                        
+
                         console.log(patentArr)
                         
 
@@ -57,18 +59,11 @@ export async function downloadZip(){
     }
 )}
 
-export async function integrateData(){
+function checkForAlerts(){
 
-    const path = Path.resolve(__dirname, 'patentFiles', 'ad20191023.zip')
 
-    Fs.createReadStream('path').pipe(unzip.Extract({ path: 'patentFiles/' }));
-}
 
-export async function checkForAlerts(){
 
-    const path = Path.resolve(__dirname, 'patentFiles', 'ad20191023.zip')
-
-    Fs.createReadStream('path').pipe(unzip.Extract({ path: 'patentFiles/' }));
 }
 
 

@@ -1,7 +1,8 @@
 import uuidv4 from "uuid/v4"
 import { Router } from "express"
-import models from "../models";
+import models, { sequelize } from "../models";
 import { unauthorized, success, failure } from "../libs/response-lib";
+import { sendAsoEmail } from "../libs/aso-confirm-lib"
 //import { Json } from "sequelize/types/lib/utils";
 
 
@@ -57,19 +58,38 @@ router.post("/", async (req, res) => {
   console.log("CLIENT CREATE")
   console.log(req.decoded.userId)
   console.log(req.body)
-  const client = await models.Client.create({
-    name: req.body.name,
-    aso: req.body.aso,
-    isVerified: false,
-    primaryContact: req.body.primaryContact,
-    bx3UserId: req.decoded.userId
-  })
 
-  if (client == null || client == "" || client == ''){
-    return res.send(failure('Failed to Add!', client));
-  }else{
-    return res.send(success('Client Added!', client));
-  }
+  sequelize.transaction(t => {
+    return models.Client.create({
+      name: req.body.name,
+      aso: req.body.aso,
+      isVerified: false,
+      primaryContact: req.body.primaryContact,
+      bx3UserId: req.decoded.userId
+    }, {transaction: t}).then(client => {
+      console.log(client.dataValues.id)
+      return models.AsoToken.create({
+        token: makeid(5),
+        email: req.body.aso,
+        isActive: true,
+        bx3ClientId:client.dataValues.id
+      }, {transaction: t});
+    }).then(asoToken => {
+      console.log(asoToken)
+      const emailRes = sendAsoEmail(req.body.aso, asoToken.dataValues.token);
+      console.log(emailRes)
+      if (emailRes.error){
+        throw new Error();
+      }else{
+        return asoToken
+      }
+    });
+  }).then(async result => {
+    return res.send(success('Added Client!', result));
+  }).catch(err => {
+    console.log(err);
+    return res.send(failure('Failed to add Client!', err));
+  });
 })
 
 router.put("/:clientId", async (req, res) => {
@@ -105,5 +125,18 @@ router.delete("/:clientId", async (req, res) => {
 
   return res.send(true)
 })
+
+
+function makeid(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+console.log(makeid(5));
 
 export default router

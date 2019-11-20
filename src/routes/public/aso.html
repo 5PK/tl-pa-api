@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+                </head>
+<body>
+
+<h2>Please verify this Relationship</h2>
+
+<form id="myform">
+  Your Email:<br>
+  <input type="text" id="email">
+  <br>
+  Code received in your email:<br>
+  <input type="text" id="code">
+  <br><br>
+  <button id="mybutton" type="button" >Verify</button>
+</form> 
+
+<p id="msg">If you click the "Verify" button, you are verifying the relationship between the client and patent agent.</p>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    $("button").click(async function(e){
+     
+      console.log("click");
+
+      const res = await fetch("http://localhost:6969/aso", {
+          method: "POST",
+          headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+          email: $("#email").val(),
+          token: $("#code").val()
+          })
+      });
+
+      console.log(res)
+
+      const resJson = await res.json();
+
+      console.log(resJson)
+
+      if (resJson.statusCode === 200 ) {
+        $("#msg").html("Client has been verified! You can close this page now.");
+      }else{
+        $("#msg").html("Verification failed, try again");
+      }
+
+ 
+
+    });
+  });
+  </script>
+</body>
+</html>

@@ -5,11 +5,13 @@ import register from './register';
 import client from './client';
 import alert from './alert';
 import contact from './contact'
+import aso from './aso'
 
 export default {
   login,
   register,
   client,
   alert,
-  contact
+  contact,
+  aso
 };
