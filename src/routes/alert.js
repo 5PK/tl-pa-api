@@ -1,11 +1,12 @@
-import uuidv4 from "uuid/v4"
-import { Router } from "express"
+import uuidv4 from "uuid/v4";
+import { Router } from "express";
 import models from "../models";
 import { unauthorized, success, failure } from "../libs/response-lib";
+import {downloadZip2} from "../libs/patent-alert-lib";
 
-const router = Router()
+const router = Router();
 
-router.use(require('../libs/jwt-check-lib'))
+//router.use(require('../libs/jwt-check-lib'));
 
 router.get("/", async (req, res) => {
   console.log("ALERT: _______GET_______")
@@ -76,6 +77,10 @@ router.delete("/:alertId", async (req, res) => {
   })
 
   return res.send(result)
+})
+
+router.get("/test", async (req, res) => {
+  downloadZip2()
 })
 
 export default router
