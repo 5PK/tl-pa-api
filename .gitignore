@@ -110,4 +110,6 @@ dist
 build/
 
 # Patent Alerts
+src/libs/patentFiles
 src/libs/patentFiles/
+src/libs/patentFiles/*
