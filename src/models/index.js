@@ -6,7 +6,9 @@ const models = {
   Token: sequelize.import('./token'),
   Alert: sequelize.import('./alert'),
   Contact: sequelize.import('./contact'),
-  AsoToken: sequelize.import('./asoToken')
+  AsoToken: sequelize.import('./asoToken'),
+  Patent: sequelize.import('./patent'),
+  Cpc: sequelize.import('./cpc')
 };
 
 Object.keys(models).forEach(key => {

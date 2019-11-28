@@ -6,7 +6,7 @@ import bodyParser from "body-parser";
 import routes from "./routes";
 import models, { sequelize } from "./models";
 import { createSeed, generateHashPassword } from "./libs/password-hash-lib";
-import { downloadZip } from "./libs/patent-alert-lib"
+import { downloadZip, handleAlerts } from "./libs/patent-alert-lib"
 import schedule from 'node-schedule'
 
 const PORT = process.env.PORT || process.env.SERVER_PORT;
@@ -32,13 +32,19 @@ app.get("/", function(req, res) {
   res.send("Hello World");
 });
 
-const eraseDatabaseOnSync = true;
+const eraseDatabaseOnSync = false;
 
 
-//var j = schedule.scheduleJob('*/1 * * * *', function(){
-//  downloadZip()
-//  console.log('Today is recognized by Kevin Tran!');
-//});
+/*
+var j = schedule.scheduleJob(' * 3 * * 4', async function(){
+  console.log('Today is recognized by Kevin Tran!');
+  var d = new Date();
+  var filename = "ipa" + d.getFullYear().toString().substr(-2) + d.getMonth().toString() + d.getDate().toString() + ".zip"
+  await downloadZip(filename)
+  await getPatentAlerts()
+  await handleAlerts(filename)
+});
+*/
 
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   if (eraseDatabaseOnSync) {
@@ -49,6 +55,8 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
     console.log(`***** Techlink-API-DEV listening on port ${PORT}! *****`)
   );
 });
+
+
 
 const seedDatabase = async () => {
   const seed = 5;
@@ -98,16 +106,45 @@ const seedDatabase = async () => {
     }
   );
 
-  await models.Alert.create({
-    name: "alert1",
-    isActive: true,
-    bx3ClientId: 1
+  await models.Alert.create(
+    {
+      name: "This is an example Alert",
+      isActive: true,
+      bx3ClientId: 1,
+      query: `[{"conditionText":"Information","title":true,"abstract":false,"spec":false,"claims":false,"applicant":true,"inventor":true,"assignee":true,"cpc":false}]`,
+      contacts:`[1, 2]`
   });
   await models.Alert.create(
     {
-      name: "alert2",
+      name: "This is a CPC Alert",
+      isActive: true,
+      bx3ClientId: 1,
+      query: `[{"conditionText":"Pump","title":true,"abstract":false,"spec":false,"claims":false,"applicant":false,"inventor":false,"assignee":false,"cpc":false}]`,
+      contacts:`[1, 2]`
+    },
+    {
+      include: [models.Client]
+    }
+  );
+  await models.Alert.create(
+    {
+      name: "This is a CPC Alert Too!",
+      isActive: true,
+      bx3ClientId: 1,
+      query: `[{"conditionText":"Information","title":true,"abstract":false,"spec":false,"claims":false,"applicant":false,"inventor":false,"assignee":false,"cpc":false}]`,
+      contacts:`[1, 2]`
+    },
+    {
+      include: [models.Client]
+    }
+  );
+  await models.Alert.create(
+    {
+      name: "This is a Disabled Alert",
       isActive: false,
-      bx3ClientId: 1
+      bx3ClientId: 1,
+      query: `[{"conditionText":"Steam","title":false,"abstract":false,"spec":false,"claims":false,"applicant":false,"inventor":false,"assignee":false,"cpc":true}]`,
+      contacts:`[1, 2]`
     },
     {
       include: [models.Client]
@@ -117,14 +154,14 @@ const seedDatabase = async () => {
   await models.Contact.create({
     firstName: "Esteve",
     lastName: "Jones",
-    email: "ejones@email.com",
+    email: "1trankev@gmail.com",
     bx3ClientId: 1
   });
   await models.Contact.create(
     {
       firstName: "Nityan",
       lastName: "Theman",
-      email: "Nityan@Theman.com",
+      email: "1trankev@gmail.com",
       bx3ClientId: 1
     },
     {
