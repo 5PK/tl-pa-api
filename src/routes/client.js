@@ -87,12 +87,10 @@ router.post("/", async (req, res) => {
           };
 
           const emailRes = sendAsoEmail(req.body.aso, data);
-          console.log(emailRes);
+          console.log('email response',emailRes);
           if (emailRes.error) {
             throw new Error();
-          } else {
-            return asoToken;
-          }
+          } 
         });
     })
     .then(async result => {
@@ -103,6 +101,8 @@ router.post("/", async (req, res) => {
       return res.send(failure("Failed to add Client!", err));
     });
 });
+
+
 
 router.put("/:clientId", async (req, res) => {
   console.log("CLient Update Request");
@@ -126,11 +126,10 @@ router.put("/:clientId", async (req, res) => {
 });
 
 router.delete("/:clientId", async (req, res) => {
-  const result = await models.Contact.destroy({
+  const result = await models.Client.destroy({
     where: { id: req.params.clientId, bx3UserId: req.decoded.userId }
   });
-
-  return res.send(true);
+  return res.send(success("Client Deleted!", result));
 });
 
 function makeid(length) {

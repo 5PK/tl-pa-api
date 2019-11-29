@@ -1,6 +1,6 @@
 import mailService from "../config/emailConfig";
 
-export function sendAsoEmail(email, data) {
+export async function sendAsoEmail(email, data) {
   var mailOptions = {
     from: process.env.EMAIL_NAME,
     to: email,
@@ -20,15 +20,24 @@ export function sendAsoEmail(email, data) {
 
   console.log(mailOptions)
 
-  mailService.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return ({ error: true, data: error });
-    }
-    else {
-      console.log("Email sent: " + info.response);
-      return ({ error: false, data: info.response });
-    }
-  });
+  const sendMail = function(mailOptions){
+    return new Promise(function (resolve, reject){
+      mailService.sendMail(mailOptions, (err, info) => {
+          if (err) {
+             console.log("error: ", err);
+             reject(err);
+          } else {
+            console.log("Message sent: %s", info.messageId, mailOptions.to);
+             resolve(info);
+          }
+       });
+    });
+  }
+
+  return await sendMail(mailOptions)
+
+   
+
+
 }
 

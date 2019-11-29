@@ -6,6 +6,7 @@ import client from './client';
 import alert from './alert';
 import contact from './contact'
 import aso from './aso'
+import manual from './manual'
 
 export default {
   login,
@@ -13,5 +14,6 @@ export default {
   client,
   alert,
   contact,
-  aso
+  aso,
+  manual
 };
