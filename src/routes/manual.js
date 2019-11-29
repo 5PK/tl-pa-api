@@ -7,17 +7,10 @@ import {getPatents, handleAlerts, downloadZip} from "../libs/patent-alert-lib";
 const router = Router();
 
 
-router.get("/fireManualAlert", async (req, res) => {
-
-    var d = new Date();
-    console.log(d.toLocaleString());
-    var localdate = d.toLocaleString()
-    var splitDate = localdate.split(',')
-    var splitDate2 = splitDate[0].split('/')
+router.get("/fire", async (req, res) => {
   
-    var filename = "ipa" + d.getFullYear().toString().substr(-2) + splitDate2[0] +splitDate2[1]
     //start download
-    downloadZip(filename)
+    downloadZip("ipa191128")
   })
 
 

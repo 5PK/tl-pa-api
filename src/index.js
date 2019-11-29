@@ -35,16 +35,15 @@ app.get("/", function(req, res) {
 const eraseDatabaseOnSync = false;
 
 
-/*
 var j = schedule.scheduleJob(' * 3 * * 4', async function(){
-  console.log('Today is recognized by Kevin Tran!');
+  console.log('Today is Thursday!');
   var d = new Date();
   var filename = "ipa" + d.getFullYear().toString().substr(-2) + d.getMonth().toString() + d.getDate().toString() + ".zip"
   await downloadZip(filename)
   await getPatentAlerts()
   await handleAlerts(filename)
 });
-*/
+
 
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   if (eraseDatabaseOnSync) {
