@@ -1,11 +1,11 @@
-import uuidv4 from "uuid/v4"
-import { Router } from "express"
+import uuidv4 from "uuid/v4";
+import { Router } from "express";
 import models from "../models";
 import { unauthorized, success, failure } from "../libs/response-lib";
 
-const router = Router()
+const router = Router();
 
-router.use(require('../libs/jwt-check-lib'))
+router.use(require('../libs/jwt-check-lib'));
 
 router.get("/", async (req, res) => {
   console.log("ALERT: _______GET_______")
@@ -32,20 +32,7 @@ router.get("/", async (req, res) => {
   }
 })
 
-/*
-router.get("/:alertId", async (req, res) => {
-  const alert = await models.Alert.findById(
-    req.params.alertId,
-    {
-      where: {
-        bx3AlertId: req.decoded.alertId,
 
-      }
-    }
-  )
-  return res.send(alert)
-})
-*/
 router.post("/", async (req, res) => {
   console.log("ALERT: _______POST_______")
   console.log(req.body.name)
@@ -83,12 +70,18 @@ router.put("/:alertId", async (req, res) => {
   return res.send(alert)
 })
 
-router.delete("/:alertId", async (req, res) => {
-  const result = await models.Alert.destroy({
-    where: { id: req.params.alertId}
-  })
 
-  return res.send(result)
-})
+router.delete("/:alertId", async (req, res) => {
+
+
+  console.log( req.params.alertId )
+
+  const result = await models.Alert.destroy({
+    where: { id: req.params.alertId }
+  });
+  return res.send(success("Alert Deleted!", result));
+});
+
+
 
 export default router

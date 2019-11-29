@@ -71,4 +71,11 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.delete("/:contactId", async (req, res) => {
+  const result = await models.Contact.destroy({
+    where: { id: req.params.contactId}
+  });
+  return res.send(success("Contact Deleted!", result));
+});
+
 export default router;
