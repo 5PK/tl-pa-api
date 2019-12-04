@@ -19,6 +19,9 @@ const user = (sequelize, DataTypes) => {
       seed: {
         type: DataTypes.INTEGER,
         unique: false,
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN
       }
     },
     {timestamps: true,});

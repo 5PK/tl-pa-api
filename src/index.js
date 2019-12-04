@@ -26,13 +26,14 @@ app.use("/client", routes.client);
 app.use("/alert", routes.alert);
 app.use("/contact", routes.contact);
 app.use("/aso", routes.aso);
+app.use("/manual", routes.manual);
 
 app.get("/", function(req, res) {
   //when we get an http get request to the root/homepage
   res.send("Hello World");
 });
 
-const eraseDatabaseOnSync = false;
+const eraseDatabaseOnSync = true;
 
 
 var j = schedule.scheduleJob(' * 3 * * 4', async function(){
@@ -40,8 +41,8 @@ var j = schedule.scheduleJob(' * 3 * * 4', async function(){
   var d = new Date();
   var filename = "ipa" + d.getFullYear().toString().substr(-2) + d.getMonth().toString() + d.getDate().toString() + ".zip"
   await downloadZip(filename)
-  await getPatentAlerts()
-  await handleAlerts(filename)
+  //await getPatentAlerts()
+  //await handleAlerts(filename)
 });
 
 
@@ -67,12 +68,13 @@ const seedDatabase = async () => {
 
   await models.User.create(
     {
-      email: "1trankev@gmail.com",
+      email: "5trankev@gmail.com",
       hashedPassword: hashedPassword,
       isVerified: true,
       firstName: "Kevin",
       lastName: "Tran",
       seed: seed,
+      isActive:true,
       bx3_clients: [
         {
           name: "Evenica",

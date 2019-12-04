@@ -2,7 +2,7 @@ import uuidv4 from "uuid/v4";
 import { Router } from "express";
 import models, { sequelize } from "../models";
 import { unauthorized, success, failure } from "../libs/response-lib";
-import { sendAsoEmail } from "../libs/aso-confirm-lib";
+import { sendAsoEmail } from "../libs/email-lib";
 //import { Json } from "sequelize/types/lib/utils";
 
 const router = Router();
