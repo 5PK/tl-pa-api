@@ -7,6 +7,9 @@ import { parseDocuments } from "../libs/parse-xml-lib";
 import mailService from "../config/emailConfig";
 import Sequelize from "sequelize";
 import axios from "axios";
+import truncate from "./truncate"
+import sequelize from '../config/dbConfig'
+
 
 
 export async function downloadZip(filename) {
@@ -63,7 +66,7 @@ export async function getPatents(zippath, filename) {
 export async function handleAlerts() {
 
   //Clear the patentFile/ directory
-  clearDirectory()
+  //clearDirectory()
 
   const alerts = await models.Alert.findAll({ where });
 
@@ -165,15 +168,15 @@ export async function handleAlerts() {
     }
   }
 
-  await models.Cpc.destroy()
-  await models.Patent.destroy()
+  //await models.Cpc.destroy({truncate:true})
+  //await models.Patent.destroy({truncate:true, cascade:true})
+
+  //await truncate(models.Patent)
+  // once you get the response from truncate, run this, and it will set foreign key checks again
+  //sequelize.query('SET FOREIGN_KEY_CHECKS = 1', { raw: true }); // <-- Specify to check referential constraints
 
 
   
-
-
-
-
 }
 
 async function sendAlert(alert, matched) {
@@ -181,7 +184,7 @@ async function sendAlert(alert, matched) {
 
   console.log(alert.contacts);
 
-  var parseContacts = JSON.parse('{"arr":' + alert.contacts + "}");
+  var parseContacts = JSON.parse('{"arr":[' + alert.contacts + "]}");
 
   console.log(parseContacts);
 
@@ -226,8 +229,8 @@ function buildEmailBody(alert, matched) {
 
     var arr = element.split('/')
 
-    var url = `http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=%${arr[1]}%22.PGNR.&OS=DN/${arr[1]}&RS=DN/${arr[1]}`
-    body += `<li><a href="${url}">Application Number: ${element}</a>/en</li>`;
+    var url = `http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=%22${arr[1]}%22.PGNR.&OS=DN/${arr[1]}&RS=DN/${arr[1]}`
+    body += `<li><a href="${url}">Application Number: ${arr[0]}${arr[1]}${arr[2]}</a>/en</li>`;
   });
 
   body += `</ul>
@@ -240,7 +243,7 @@ function buildEmailBody(alert, matched) {
 
 function clearDirectory(){
 
-  const directory = 'patentFiles';
+  const directory = '/patentFiles';
 
   fs.readdir(directory, (err, files) => {
     if (err) throw err;
@@ -253,3 +256,6 @@ function clearDirectory(){
   });
 
 }
+
+
+

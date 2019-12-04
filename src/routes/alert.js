@@ -57,17 +57,23 @@ router.post("/", async (req, res) => {
 })
 
 router.put("/:alertId", async (req, res) => {
+  console.log("alert update")
 
   const alert = await models.Alert.update(
     {
         name: req.body.name,
-        contacts: req.body.contacts,
-        isActive: req.body.isActive
+        contacts: "[" + String(req.body.contacts) + "]",
+        isActive: req.body.isActive,
+        query: JSON.stringify(req.body.query)
     },
     { where: { id: req.params.alertId } }
   )
 
-  return res.send(alert)
+  if (alert[0] === 1) {
+    return res.send(success("Alert Updated!", req.body));
+  } else {
+    return res.send(failure("Alert Update Failed!", alert));
+  }
 })
 
 

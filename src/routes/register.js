@@ -1,52 +1,132 @@
 import { Router } from "express";
-import bodyParse from "body-parser";
-import buildResponse from "../libs/response-lib" 
-import { createSeed, generateHashPassword } from "../libs/password-hash-lib" 
+import { success, failure } from "../libs/response-lib";
+import { createSeed, generateHashPassword } from "../libs/password-hash-lib";
+import { sendRegEmail } from "../libs/email-lib";
+import models, { sequelize } from "../models";
 
 const router = Router();
 
 router.post("/", async (req, res) => {
 
   const seed = createSeed();
-  const hashedPassword = generateHashPassword(password + seed);
-
+  const hashedPassword = generateHashPassword(req.body.password + seed);
+  
   /*
   TODO: 
   1.ADD CHECK FOR USER EXISTS
   2.EMAIL/PASSVALIDATION?
   */
 
-  const user = await req.context.models.User.create({
-    email: req.body.email,
-    firstName: req.body.firstName,
-    lastName: req.body.lastname,
-    hashedPassword: hashedPassword,
-    seed: seed
-  });
+  sequelize
+    .transaction(t => {
+      return models.User.create(
+        {
+          email: req.body.email,
+          firstName: " ",
+          lastName: " ",
+          hashedPassword: hashedPassword,
+          seed: seed
+        },
+        { transaction: t }
+      )
+        .then(user => {
+          console.log(user.dataValues.id);
+          return models.RegToken.create(
+            {
+              token: makeid(5),
+              isActive: true,
+              bx3UserId: user.dataValues.id
+            },
+            { transaction: t }
+          );
+        })
+        .then(regToken => {
+          console.log(regToken);
+          var data = {
+            code: regToken.dataValues.token
+          };
 
-  res.send(buildResponse.created(body));
+          const emailRes = sendRegEmail(req.body.email, data);
+          console.log("email response", emailRes);
+          if (emailRes.error) {
+            throw new Error();
+          }
+        });
+    })
+    .then(async result => {
+      return res.send(success("Added User!", result));
+    })
+    .catch(err => {
+      console.log(err);
+      return res.send(failure("Failed to add User!", err));
+    });
 
-
-  /*
-  const query = `INSERT INTO user_tb (email, hashedPassword, isVerified, seed) VALUES ('${email}', '${hashedPassword}', ${isVerified}, '${seed}')`;
-  pool.query(query, (err, results, fields) => {
-    if (err) {
-      res.send(buildResponse.failure({ data: null, message: err.message }));
+  function makeid(length) {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-
-    const { insertId } = results;
-
-    console.log(results);
-
-    const client = { id: insertId, name, aso, primaryContact, isVerified };
-
-    const body = {
-      data: client,
-      message: `user ${name} successfully registered.`
-    };
-    res.send(buildResponse.created(body));
-  });
-  */
+    return result;
+  }
 });
+
+router.post("/confirm", async (req, res) => {
+  if (await verifyCode(req.body.code)) {
+    sequelize
+      .transaction(t => {
+        return models.RegToken.update(
+          {
+            isActive: false
+          },
+          { where: { token: req.body.code } },
+          { transaction: t }
+        )
+          .then(token => {
+            return models.RegToken.findOne(
+              { where: { token: req.body.code } },
+              { transaction: t }
+            );
+          })
+          .then(token => {
+            console.log(token);
+            return models.User.update(
+              {
+                isActive: true
+              },
+              { where: { id: token.dataValues.bx3UserId } },
+              { transaction: t }
+            );
+          });
+      })
+      .then(result => {
+        return res.send(success("Verified User!", result));
+      })
+      .catch(err => {
+        console.log(err);
+        return res.send(failure("Failed to Verify User!", err));
+      });
+  } else {
+    return res.send(failure("Failed to Verify!"));
+  }
+});
+
+async function verifyCode(code) {
+  const regToken = await models.RegToken.findAll({
+    where: {
+      token: code
+    }
+  });
+
+  console.log(regToken);
+
+  if (regToken.length === 1) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export default router;

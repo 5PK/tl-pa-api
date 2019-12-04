@@ -23,7 +23,8 @@ router.post("/", async (req, res) => {
 
   const result = await models.User.findAll({
     where: {
-      email: req.body.email
+      email: req.body.email,
+      isActive:true
     }
   });
 
@@ -36,6 +37,8 @@ router.post("/", async (req, res) => {
     );
   } else {
     const user = result[0].dataValues;
+
+    console.log(user)
 
     if (
       !verifyHashPassword(req.body.password + user.seed, user.hashedPassword)

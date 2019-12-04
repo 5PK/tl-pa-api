@@ -8,7 +8,8 @@ const models = {
   Contact: sequelize.import('./contact'),
   AsoToken: sequelize.import('./asoToken'),
   Patent: sequelize.import('./patent'),
-  Cpc: sequelize.import('./cpc')
+  Cpc: sequelize.import('./cpc'),
+  RegToken: sequelize.import('./regToken')
 };
 
 Object.keys(models).forEach(key => {
