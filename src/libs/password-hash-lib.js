@@ -1,13 +1,17 @@
-import passwordHash from "password-hash"
+const passwordHash = require("password-hash")
 
-export function createSeed() {
+function createSeed() {
   return Math.floor(Math.random() * 10 + 1)
 }
 
-export function generateHashPassword(seededPassword) {
+function generateHashPassword(seededPassword) {
   return passwordHash.generate(seededPassword)
 }
 
-export function verifyHashPassword(password , hashedPassword){
+function verifyHashPassword(password , hashedPassword){
   return passwordHash.verify(password , hashedPassword)
 }
+
+exports.createSeed = createSeed;
+exports.generateHashPassword = generateHashPassword;
+exports.verifyHashPassword = verifyHashPassword;

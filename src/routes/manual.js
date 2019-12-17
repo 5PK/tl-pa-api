@@ -1,14 +1,10 @@
-import { Router } from "express";
-import {getPatents, handleAlerts, downloadZip} from "../libs/patent-alert-lib";
+const Router = require("express");
+const paLib = require("../libs/patent-alert-lib");
 const router = Router();
 
-
 router.get("/fire", async (req, res) => {
-  
-    //start download
-    downloadZip("ipa191128")
-  })
+  //start download
+  paLib.downloadZip("ipa191128");
+});
 
-
-
-export default router
+module.exports = router;

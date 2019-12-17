@@ -4,7 +4,6 @@ const cpc = (sequelize, DataTypes) => {
     {
       code: DataTypes.STRING,
       docRef: DataTypes.STRING
-
     },
     {
       timestamps: false
@@ -15,9 +14,7 @@ const cpc = (sequelize, DataTypes) => {
     Cpc.belongsTo(models.Patent, { foreignKey: "bx3PatentId" });
   };
 
-
-
   return Cpc;
 };
 
-export default cpc;
+module.exports = cpc;

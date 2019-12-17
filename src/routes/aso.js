@@ -1,7 +1,8 @@
-import uuidv4 from "uuid/v4";
-import { Router } from "express";
-import models, { sequelize } from "../models";
-import { unauthorized, success, failure } from "../libs/response-lib";
+
+const Router  = require("express")
+const failure = require("../libs/response-lib").failure;
+const success = require("../libs/response-lib").success;
+const models = require("../models")
 
 const router = Router();
 
@@ -72,4 +73,4 @@ async function verifyRelationship(email, token) {
   }
 }
 
-export default router;
+module.exports = router

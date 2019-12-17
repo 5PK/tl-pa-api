@@ -1,5 +1,5 @@
-import uuidv4 from "uuid/v4";
-import asoToken from "./asoToken";
+var uuidv4 = require("uuid/v4")
+var asoToken = require("./asoToken")
 
 const client = (sequelize, DataTypes) => {
   const Client = sequelize.define(
@@ -37,4 +37,4 @@ const client = (sequelize, DataTypes) => {
   return Client;
 };
 
-export default client;
+module.exports = client

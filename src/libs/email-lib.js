@@ -1,6 +1,6 @@
-import mailService from "../config/emailConfig";
+const mailService = require("../config/emailConfig");
 
-export async function sendAsoEmail(email, data) {
+async function sendAsoEmail(email, data) {
   var mailOptions = {
     from: process.env.EMAIL_NAME,
     to: email,
@@ -18,30 +18,26 @@ export async function sendAsoEmail(email, data) {
     <p><strong>&nbsp;</strong></p>`
   };
 
-  console.log(mailOptions)
+  console.log(mailOptions);
 
-  const sendMail = function(mailOptions){
-    return new Promise(function (resolve, reject){
+  const sendMail = function(mailOptions) {
+    return new Promise(function(resolve, reject) {
       mailService.sendMail(mailOptions, (err, info) => {
-          if (err) {
-             console.log("error: ", err);
-             reject(err);
-          } else {
-            console.log("Message sent: %s", info.messageId, mailOptions.to);
-             resolve(info);
-          }
-       });
+        if (err) {
+          console.log("error: ", err);
+          reject(err);
+        } else {
+          console.log("Message sent: %s", info.messageId, mailOptions.to);
+          resolve(info);
+        }
+      });
     });
-  }
+  };
 
-  return await sendMail(mailOptions)
-
-   
-
-
+  return await sendMail(mailOptions);
 }
 
-export async function sendRegEmail(email, data) {
+async function sendRegEmail(email, data) {
   var mailOptions = {
     from: process.env.EMAIL_NAME,
     to: email,
@@ -57,26 +53,24 @@ export async function sendRegEmail(email, data) {
     <p><strong>&nbsp;</strong></p>`
   };
 
-  console.log(mailOptions)
+  console.log(mailOptions);
 
-  const sendMail = function(mailOptions){
-    return new Promise(function (resolve, reject){
+  const sendMail = function(mailOptions) {
+    return new Promise(function(resolve, reject) {
       mailService.sendMail(mailOptions, (err, info) => {
-          if (err) {
-             console.log("error: ", err);
-             reject(err);
-          } else {
-            console.log("Message sent: %s", info.messageId, mailOptions.to);
-             resolve(info);
-          }
-       });
+        if (err) {
+          console.log("error: ", err);
+          reject(err);
+        } else {
+          console.log("Message sent: %s", info.messageId, mailOptions.to);
+          resolve(info);
+        }
+      });
     });
-  }
+  };
 
-  return await sendMail(mailOptions)
-
-   
-
-
+  return await sendMail(mailOptions);
 }
 
+exports.sendAsoEmail = sendAsoEmail;
+exports.sendRegEmail = sendRegEmail;

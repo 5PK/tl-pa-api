@@ -1,9 +1,9 @@
-import uuidv4 from "uuid/v4";
-import { Router } from "express";
-import models, { sequelize } from "../models";
-import { unauthorized, success, failure } from "../libs/response-lib";
-import { sendAsoEmail } from "../libs/email-lib";
-//import { Json } from "sequelize/types/lib/utils";
+const Router = require("express");
+const failure = require("../libs/response-lib").failure;
+const success = require("../libs/response-lib").success;
+var emLib = require("../libs/email-lib")
+var models = require("../models")
+var sequelize = require("../config/dbConfig")
 
 const router = Router();
 
@@ -86,7 +86,7 @@ router.post("/", async (req, res) => {
             portal: "localhost:6969/aso"
           };
 
-          const emailRes = sendAsoEmail(req.body.aso, data);
+          const emailRes = emLib.sendAsoEmail(req.body.aso, data);
           console.log('email response',emailRes);
           if (emailRes.error) {
             throw new Error();
@@ -143,6 +143,6 @@ function makeid(length) {
   return result;
 }
 
-console.log(makeid(5));
 
-export default router;
+module.exports = router;
+
