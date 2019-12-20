@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require("nodemailer")
 
 var mailService = nodemailer.createTransport({
   service: 'gmail',
@@ -8,4 +8,4 @@ var mailService = nodemailer.createTransport({
   }
 });
 
-export default mailService;
+module.exports = mailService;

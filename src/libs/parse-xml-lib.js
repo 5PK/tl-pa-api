@@ -1,12 +1,12 @@
 const parseString = require("xml2js").parseString;
 var fs = require("fs");
 const readline = require("readline");
-import Path from "path";
-import models from "../models";
+const Path = require("path");
+const models = require("../models");
 var ScuttleZanetti = require("scuttlezanetti").api;
 var stopWords = require("scuttlezanetti").stopWords;
 
-export function parseDocuments(zip, xmlPath, filename) {
+function parseDocuments(zip, xmlPath, filename) {
   return new Promise((resolve, reject) => {
     try {
       //Unzips file to disk
@@ -73,7 +73,7 @@ function getInventors(arr) {
     var fname = element.addressbook[0]["first-name"][0];
     var lname = element.addressbook[0]["last-name"][0];
     var inventor = { name: fname + " " + lname };
-    rt += fname + " " + lname + " "
+    rt += fname + " " + lname + " ";
   });
 
   return rt;
@@ -91,7 +91,8 @@ function getApplicants(arr) {
       rt += element["us-applicant"][0].addressbook[0]["last-name"][0] + " ";
     }
     if ("orgname" in element["us-applicant"][0].addressbook[0]) {
-      rt += orgname = element["us-applicant"][0].addressbook[0].orgname[0] + " ";
+      rt += orgname =
+        element["us-applicant"][0].addressbook[0].orgname[0] + " ";
     }
   });
 
@@ -242,13 +243,18 @@ function getDescDraw(result) {
 }
 
 async function addPatentToDb(result) {
-//return new Promise((resolve, reject) => {
+  //return new Promise((resolve, reject) => {
   try {
     if ("us-patent-application" in result) {
       var doc =
         result["us-patent-application"]["us-bibliographic-data-application"][0];
       var docInfo = doc["publication-reference"][0]["document-id"][0];
-      var appid = docInfo["country"] + "/" + docInfo["doc-number"] + "/" + docInfo["kind"];
+      var appid =
+        docInfo["country"] +
+        "/" +
+        docInfo["doc-number"] +
+        "/" +
+        docInfo["kind"];
 
       console.log("applicationid", appid);
 
@@ -304,21 +310,29 @@ async function addPatentToDb(result) {
 
         if (cpcArr.length > 0) {
           for (let i = 0; i < cpcArr.length; i++) {
-            cpcArr[i] = {code: cpcArr[i].section[0] + cpcArr[i].class[0] + cpcArr[i].subclass[0] +  cpcArr[i]["main-group"][0], bx3PatentId: newpatent.dataValues.id, docRef: appid}
-          };
+            cpcArr[i] = {
+              code:
+                cpcArr[i].section[0] +
+                cpcArr[i].class[0] +
+                cpcArr[i].subclass[0] +
+                cpcArr[i]["main-group"][0],
+              bx3PatentId: newpatent.dataValues.id,
+              docRef: appid
+            };
+          }
         }
       }
-      
-      models.Cpc.bulkCreate(cpcArr)
-        .then(() => {
-          return true;
-        })
 
+      models.Cpc.bulkCreate(cpcArr).then(() => {
+        return true;
+      });
     } else {
       return true;
     }
   } catch (error) {
-    return error ;
+    return error;
   }
-//});
+  //});
 }
+
+module.exports = parseDocuments

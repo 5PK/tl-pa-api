@@ -1,7 +1,7 @@
-import uuidv4 from "uuid/v4";
-import { Router } from "express";
-import models from "../models";
-import { unauthorized, success, failure } from "../libs/response-lib";
+const Router = require("express");
+const failure = require("../libs/response-lib").failure;
+const success = require("../libs/response-lib").success;
+var models = require("../models");
 
 const router = Router();
 
@@ -63,8 +63,7 @@ router.post("/", async (req, res) => {
     bx3ClientId: parseInt(req.body.bx3ClientId)
   });
 
-  if (contact == null || contact == "" || contact == "" ) {
-
+  if (contact == null || contact == "" || contact == "") {
     return res.send(failure("Failed to Add!", contact.dataValues));
   } else {
     return res.send(success("Contact Added!", contact.dataValues));
@@ -73,9 +72,9 @@ router.post("/", async (req, res) => {
 
 router.delete("/:contactId", async (req, res) => {
   const result = await models.Contact.destroy({
-    where: { id: req.params.contactId}
+    where: { id: req.params.contactId }
   });
   return res.send(success("Contact Deleted!", result));
 });
 
-export default router;
+module.exports = router;

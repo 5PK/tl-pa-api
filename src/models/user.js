@@ -1,45 +1,51 @@
 const user = (sequelize, DataTypes) => {
-    const User = sequelize.define('bx3_user', {
+  const User = sequelize.define(
+    "bx3_user",
+    {
       email: {
         type: DataTypes.STRING,
-        unique: true,
+        unique: true
       },
-      firstName:{
+      firstName: {
         type: DataTypes.STRING,
-        unique: false,
+        unique: false
       },
-      lastName:{
+      lastName: {
         type: DataTypes.STRING,
-        unique: false,
+        unique: false
       },
       hashedPassword: {
         type: DataTypes.STRING,
-        unique: false,
+        unique: false
       },
       seed: {
         type: DataTypes.INTEGER,
-        unique: false,
+        unique: false
       },
       isActive: {
         type: DataTypes.BOOLEAN
       }
     },
-    {timestamps: true,});
-  
-    User.associate = models => {
-      User.hasMany(models.Client, { onDelete: 'CASCADE' }, { foreignKey: 'bx3UserId' });
-    };
-  
-    User.findByLogin = async login => {
-      let user = await User.findOne({
-        where: { email: login },
-      });
-  
-      return user;
-    };
-  
-    return User;
-    
+    { timestamps: true }
+  );
+
+  User.associate = models => {
+    User.hasMany(
+      models.Client,
+      { onDelete: "CASCADE" },
+      { foreignKey: "bx3UserId" }
+    );
   };
-  
-  export default user;
+
+  User.findByLogin = async login => {
+    let user = await User.findOne({
+      where: { email: login }
+    });
+
+    return user;
+  };
+
+  return User;
+};
+
+module.exports = user;

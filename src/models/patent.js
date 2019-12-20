@@ -17,11 +17,14 @@ const patent = (sequelize, DataTypes) => {
   );
 
   Patent.associate = models => {
-    Patent.hasMany(models.Cpc, { onDelete: 'CASCADE' }, { foreignKey: 'bx3PatentId' });
+    Patent.hasMany(
+      models.Cpc,
+      { onDelete: "CASCADE" },
+      { foreignKey: "bx3PatentId" }
+    );
   };
-
 
   return Patent;
 };
 
-export default patent;
+module.exports = patent;

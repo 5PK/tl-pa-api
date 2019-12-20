@@ -1,19 +1,16 @@
-//import session from './session';
-import login from './login';
-import register from './register';
-//import token from './Token';
-import client from './client';
-import alert from './alert';
-import contact from './contact'
-import aso from './aso'
-import manual from './manual'
+const login = require("./login")
+const register = require("./register")
+const client = require("./client")
+const alert = require("./alert")
+const contact = require("./contact")
+const aso = require("./aso")
+const manual = require("./manual")
 
-export default {
-  login,
-  register,
-  client,
-  alert,
-  contact,
-  aso,
-  manual
-};
+exports.login = login;
+exports.register = register;
+exports.client = client;
+exports.alert = alert;
+exports.contact = contact;
+exports.aso = aso;
+exports.manual = manual;
+

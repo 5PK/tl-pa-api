@@ -1,35 +1,29 @@
-import { Router } from "express";
-import jwt from "jsonwebtoken";
-import { unauthorized, success, failure } from "../libs/response-lib";
-import {
-  generateHashPassword,
-  verifyHashPassword
-} from "../libs/password-hash-lib";
-import models from "../models";
+const Router = require("express");
+var jwt = require("jsonwebtoken");
+const failure = require("../libs/response-lib").failure;
+const success = require("../libs/response-lib").success;
+var pwLib = require("../libs/password-hash-lib")
+var models = require("../models")
+
 
 const router = Router();
 
 router.post("/", async (req, res) => {
+  console.log("login attempt");
+  console.log(req.body.email);
 
-  console.log("login attempt")
-  console.log(req.body.email)
-
-  if(req.body.email == null || req.body.password == null){
-    return res.send(
-      failure(
-        "undefined values"
-      ))
+  if (req.body.email == null || req.body.password == null) {
+    return res.send(failure("undefined values"));
   }
 
   const result = await models.User.findAll({
     where: {
       email: req.body.email,
-      isActive:true
+      isActive: true
     }
   });
 
   if (result === null || result.length == !1) {
-
     return res.send(
       failure(
         "User not Found! If this is an unexpected error, contact the sys-admin"
@@ -38,10 +32,10 @@ router.post("/", async (req, res) => {
   } else {
     const user = result[0].dataValues;
 
-    console.log(user)
+    console.log(user);
 
     if (
-      !verifyHashPassword(req.body.password + user.seed, user.hashedPassword)
+      !pwLib.verifyHashPassword(req.body.password + user.seed, user.hashedPassword)
     ) {
       return res.send(unauthorized("Password Incorrect!"));
     } else {
@@ -66,7 +60,7 @@ router.post("/", async (req, res) => {
 
       // If no tokens, create one
       if (tokenCount == 0) {
-        await createToken(user.id);
+        await createToken(user.id, token);
         return res.send(success("User Login Success!", response));
 
         // If token exists,
@@ -80,11 +74,11 @@ router.post("/", async (req, res) => {
   }
 });
 
-const createToken = async id => {
+const createToken = async (id, toke) => {
   //TODO: TRY CATCH
   const token = await models.Token.create({
     status: "authenticated",
-    token: token,
+    token: toke,
     userId: id
   });
 };
@@ -101,4 +95,4 @@ const updateToken = async id => {
   );
 };
 
-export default router;
+module.exports = router;

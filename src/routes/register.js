@@ -1,16 +1,18 @@
-import { Router } from "express";
-import { success, failure } from "../libs/response-lib";
-import { createSeed, generateHashPassword } from "../libs/password-hash-lib";
-import { sendRegEmail } from "../libs/email-lib";
-import models, { sequelize } from "../models";
+
+const Router  = require("express")
+const failure = require("../libs/response-lib").failure;
+const success = require("../libs/response-lib").success;
+const pwLib = require("../libs/password-hash-lib")
+const emLib = require("../libs/email-lib")
+const sequelize = require("../config/dbConfig")
+const models = require("../models")
 
 const router = Router();
 
 router.post("/", async (req, res) => {
+  const seed = pwLib.createSeed();
+  const hashedPassword = pwLib.generateHashPassword(req.body.password + seed);
 
-  const seed = createSeed();
-  const hashedPassword = generateHashPassword(req.body.password + seed);
-  
   /*
   TODO: 
   1.ADD CHECK FOR USER EXISTS
@@ -46,7 +48,7 @@ router.post("/", async (req, res) => {
             code: regToken.dataValues.token
           };
 
-          const emailRes = sendRegEmail(req.body.email, data);
+          const emailRes = emLib.sendRegEmail(req.body.email, data);
           console.log("email response", emailRes);
           if (emailRes.error) {
             throw new Error();
@@ -129,4 +131,4 @@ async function verifyCode(code) {
   }
 }
 
-export default router;
+module.exports = router;

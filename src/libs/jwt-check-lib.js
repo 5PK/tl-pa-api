@@ -1,6 +1,7 @@
-import "dotenv/config"
-import {unauthorized, webtokenerror} from "../libs/response-lib"
-import jwt from 'jsonwebtoken'
+
+require("dotenv/config")
+const rl = require("../libs/response-lib")
+const jwt = require("jsonwebtoken")
 
 
 module.exports = (req,res,next) => {
@@ -16,7 +17,7 @@ module.exports = (req,res,next) => {
     jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
         if (err) {
             console.log(err)
-            return res.send(unauthorized({"error": true, "message": 'Unauthorized access.' }))
+            return res.send(rl.unauthorized({"error": true, "message": 'Unauthorized access.' }))
         }
       req.decoded = decoded
       next()
@@ -24,6 +25,6 @@ module.exports = (req,res,next) => {
   } else {
     // if there is no token
     // return an error
-    return res.send(webtokenerror({"error": true, "message": 'No token provided.' }))
+    return res.send(rl.webtokenerror({"error": true, "message": 'No token provided.' }))
   }
 }

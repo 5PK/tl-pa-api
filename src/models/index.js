@@ -1,4 +1,4 @@
-import sequelize from '../config/dbConfig'
+var sequelize = require("../config/dbConfig")
 
 const models = {
   User: sequelize.import('./user'),
@@ -18,6 +18,6 @@ Object.keys(models).forEach(key => {
   }
 });
 
-export { sequelize };
+module.exports = models;
 
-export default models;
+

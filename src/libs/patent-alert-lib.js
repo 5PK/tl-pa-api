@@ -1,18 +1,12 @@
-import StreamZip from "node-stream-zip";
-//import fsExtra from "fs-extra"
-import fs from "fs";
-import Path from "path";
-import models from "../models";
-import { parseDocuments } from "../libs/parse-xml-lib";
-import mailService from "../config/emailConfig";
-import Sequelize from "sequelize";
-import axios from "axios";
-import truncate from "./truncate"
-import sequelize from '../config/dbConfig'
+var StreamZip = require("node-stream-zip");
+var Path = require("path");
+var models = require("../models");
+var xmlLib = require("../libs/parse-xml-lib");
+var mailService = require("../config/emailConfig");
+var Sequelize = require("sequelize");
+var axios = require("axios");
 
-
-
-export async function downloadZip(filename) {
+async function downloadZip(filename) {
   console.log(filename);
   try {
     const url =
@@ -43,7 +37,7 @@ export async function downloadZip(filename) {
   }
 }
 
-export async function getPatents(zippath, filename) {
+async function getPatents(zippath, filename) {
   console.log(1);
 
   const xmlPath = Path.resolve(__dirname, "patentFiles");
@@ -59,12 +53,9 @@ export async function getPatents(zippath, filename) {
   handleAlerts();
 
   console.log(4);
-
-
 }
 
-export async function handleAlerts() {
-
+async function handleAlerts() {
   //Clear the patentFile/ directory
   //clearDirectory()
 
@@ -174,9 +165,6 @@ export async function handleAlerts() {
   //await truncate(models.Patent)
   // once you get the response from truncate, run this, and it will set foreign key checks again
   //sequelize.query('SET FOREIGN_KEY_CHECKS = 1', { raw: true }); // <-- Specify to check referential constraints
-
-
-  
 }
 
 async function sendAlert(alert, matched) {
@@ -202,22 +190,21 @@ async function sendAlert(alert, matched) {
       html: emailBody
     };
 
-    const sendMail = function(mailOptions){
-      return new Promise(function (resolve, reject){
+    const sendMail = function(mailOptions) {
+      return new Promise(function(resolve, reject) {
         mailService.sendMail(mailOptions, (err, info) => {
-            if (err) {
-               console.log("error: ", err);
-               reject(err);
-            } else {
-              console.log("Message sent: %s", info.messageId, mailOptions.to);
-               resolve(info);
-            }
-         });
+          if (err) {
+            console.log("error: ", err);
+            reject(err);
+          } else {
+            console.log("Message sent: %s", info.messageId, mailOptions.to);
+            resolve(info);
+          }
+        });
       });
-    }
+    };
 
-    await sendMail(mailOptions)
-
+    await sendMail(mailOptions);
   }
 }
 
@@ -226,10 +213,9 @@ function buildEmailBody(alert, matched) {
 <ul>`;
 
   matched.forEach(element => {
+    var arr = element.split("/");
 
-    var arr = element.split('/')
-
-    var url = `http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=%22${arr[1]}%22.PGNR.&OS=DN/${arr[1]}&RS=DN/${arr[1]}`
+    var url = `http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=%22${arr[1]}%22.PGNR.&OS=DN/${arr[1]}&RS=DN/${arr[1]}`;
     body += `<li><a href="${url}">Application Number: ${arr[0]}${arr[1]}${arr[2]}</a>/en</li>`;
   });
 
@@ -241,9 +227,8 @@ function buildEmailBody(alert, matched) {
   return body;
 }
 
-function clearDirectory(){
-
-  const directory = '/patentFiles';
+function clearDirectory() {
+  const directory = "/patentFiles";
 
   fs.readdir(directory, (err, files) => {
     if (err) throw err;
@@ -254,8 +239,8 @@ function clearDirectory(){
       });
     }
   });
-
 }
 
-
-
+exports.downloadZip = downloadZip
+exports.getPatents = getPatents
+exports.handleAlerts = handleAlerts

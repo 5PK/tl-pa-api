@@ -1,4 +1,4 @@
-import Sequelize from "sequelize";
+var Sequelize = require("sequelize")
 
 const isProduction = process.env.NODE_ENV === "production";
 

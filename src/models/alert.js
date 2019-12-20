@@ -1,22 +1,21 @@
 const alert = (sequelize, DataTypes) => {
-    const Alert = sequelize.define(
-      "bx3_alert",
-      {
-        name: DataTypes.STRING,
-        isActive: DataTypes.BOOLEAN,
-        query: DataTypes.TEXT,
-        contacts: DataTypes.TEXT,
-      },
-      {
-        timestamps: true
-      }
-    );
-  
-    Alert.associate = models => {
-        Alert.belongsTo(models.Client, { foreignKey: "bx3ClientId" });
-    };
-  
-    return Alert;
+  const Alert = sequelize.define(
+    "bx3_alert",
+    {
+      name: DataTypes.STRING,
+      isActive: DataTypes.BOOLEAN,
+      query: DataTypes.TEXT,
+      contacts: DataTypes.TEXT
+    },
+    {
+      timestamps: true
+    }
+  );
+
+  Alert.associate = models => {
+    Alert.belongsTo(models.Client, { foreignKey: "bx3ClientId" });
   };
-  
-  export default alert;
+
+  return Alert;
+};
+module.exports = alert;

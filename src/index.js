@@ -1,17 +1,17 @@
-import "dotenv/config";
-import "@babel/polyfill";
-import cors from "cors";
-import express from "express";
-import bodyParser from "body-parser";
-import routes from "./routes";
-import models, { sequelize } from "./models";
-import { createSeed, generateHashPassword } from "./libs/password-hash-lib";
-import { downloadZip, handleAlerts } from "./libs/patent-alert-lib"
-import schedule from 'node-schedule'
+require("dotenv/config")
+var cors = require("cors");
+var app = require("express")();
+var bodyParser = require("body-parser")
+var routes = require("./routes")
+var models = require("./models")
+var sequelize = require("./config/dbConfig")
+var pwLib = require("./libs/password-hash-lib")
+var paLib = require("./libs/patent-alert-lib")
+var schedule = require("node-schedule")
+
 
 const PORT = process.env.PORT || process.env.SERVER_PORT;
 
-const app = express();
 
 // Then use it before your routes are set up:
 app.use(cors());
@@ -19,7 +19,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//app.use('/session', routes.session);
+// Set the Routes of the application
 app.use("/register", routes.register);
 app.use("/login", routes.login);
 app.use("/client", routes.client);
@@ -33,19 +33,19 @@ app.get("/", function(req, res) {
   res.send("Hello World");
 });
 
+// Flag for erasing db on server start
 const eraseDatabaseOnSync = true;
 
 
+// Schedule the Patent System
 var j = schedule.scheduleJob(' * 3 * * 4', async function(){
   console.log('Today is Thursday!');
   var d = new Date();
   var filename = "ipa" + d.getFullYear().toString().substr(-2) + d.getMonth().toString() + d.getDate().toString() + ".zip"
   await downloadZip(filename)
-  //await getPatentAlerts()
-  //await handleAlerts(filename)
 });
 
-
+// Sync and Seed
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
   if (eraseDatabaseOnSync) {
     seedDatabase();
@@ -57,11 +57,11 @@ sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
 });
 
 
-
+// Seed Database Function
 const seedDatabase = async () => {
   const seed = 5;
 
-  const hashedPassword = generateHashPassword("Passw0rd!" + seed);
+  const hashedPassword = pwLib.generateHashPassword("Passw0rd!" + seed);
 
   console.log(seed);
   console.log("******  " + hashedPassword + "  ******");
