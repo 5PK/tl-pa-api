@@ -68,7 +68,7 @@ const seedDatabase = async () => {
 
   await models.User.create(
     {
-      email: "5trankev@gmail.com",
+      email: "1trankev@gmail.com",
       hashedPassword: hashedPassword,
       isVerified: true,
       firstName: "Kevin",
