@@ -3,6 +3,7 @@ const Router  = require("express")
 const failure = require("../libs/response-lib").failure;
 const success = require("../libs/response-lib").success;
 const models = require("../models")
+const sequelize = require("../config/dbConfig")
 
 const router = Router();
 
