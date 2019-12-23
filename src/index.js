@@ -68,7 +68,7 @@ const seedDatabase = async () => {
 
   await models.User.create(
     {
-      email: "5trankev@gmail.com",
+      email: "1trankev@gmail.com",
       hashedPassword: hashedPassword,
       isVerified: true,
       firstName: "Kevin",
@@ -117,7 +117,7 @@ const seedDatabase = async () => {
   });
   await models.Alert.create(
     {
-      name: "This is a CPC Alert",
+      name: "Searches Pump",
       isActive: true,
       bx3ClientId: 1,
       query: `[{"conditionText":"Pump","title":true,"abstract":false,"spec":false,"claims":false,"applicant":false,"inventor":false,"assignee":false,"cpc":false}]`,
@@ -129,10 +129,10 @@ const seedDatabase = async () => {
   );
   await models.Alert.create(
     {
-      name: "This is a CPC Alert Too!",
+      name: "This is a CPC Alert!",
       isActive: true,
       bx3ClientId: 1,
-      query: `[{"conditionText":"Information","title":true,"abstract":false,"spec":false,"claims":false,"applicant":false,"inventor":false,"assignee":false,"cpc":false}]`,
+      query: `[{"conditionText":"B29C48","title":false,"abstract":false,"spec":false,"claims":false,"applicant":false,"inventor":false,"assignee":false,"cpc":true}]`,
       contacts:`[1, 2]`
     },
     {
@@ -144,7 +144,7 @@ const seedDatabase = async () => {
       name: "This is a Disabled Alert",
       isActive: false,
       bx3ClientId: 1,
-      query: `[{"conditionText":"Steam","title":false,"abstract":false,"spec":false,"claims":false,"applicant":false,"inventor":false,"assignee":false,"cpc":true}]`,
+      query: `[{"conditionText":"Steam","title":true,"abstract":false,"spec":false,"claims":false,"applicant":false,"inventor":false,"assignee":false,"cpc":false}]`,
       contacts:`[1, 2]`
     },
     {

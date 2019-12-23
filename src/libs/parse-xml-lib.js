@@ -335,4 +335,4 @@ async function addPatentToDb(result) {
   //});
 }
 
-module.exports = parseDocuments
+exports.parseDocuments = parseDocuments;
