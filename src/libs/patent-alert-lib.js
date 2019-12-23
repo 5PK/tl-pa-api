@@ -48,7 +48,7 @@ async function getPatents(zippath, filename) {
   });
   console.log(3);
 
-  await parseDocuments(zip, xmlPath, filename);
+  await xmlLib.parseDocuments(zip, xmlPath, filename);
 
   handleAlerts();
 
@@ -73,9 +73,13 @@ async function handleAlerts() {
         var query = queryList[index];
 
         if (query.cpc) {
+          console.log('cpc Query')
+          const Op = Sequelize.Op;
           const cpcs = await models.Cpc.findAll({
             where: {
-              code: query.conditionText
+              code: {   
+                [Op.like]: '%' + query.conditionText + '%'
+              }
             }
           });
 
@@ -209,14 +213,15 @@ async function sendAlert(alert, matched) {
 }
 
 function buildEmailBody(alert, matched) {
-  var body = `<h1 style="color: #5e9ca0;">These Patents have been matched from this Alert ${alert.name}!</h1><h2 style="color: #2e6c80;">Check them at the links below:</h2>
+  console.log(alert.name)
+  var body = `<h1 style="color: #5e9ca0;">These Patents have been matched from this Alert [${alert.name}]</h1><h2 style="color: #2e6c80;">Check them at the links below:</h2>
 <ul>`;
 
   matched.forEach(element => {
     var arr = element.split("/");
 
     var url = `http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=%22${arr[1]}%22.PGNR.&OS=DN/${arr[1]}&RS=DN/${arr[1]}`;
-    body += `<li><a href="${url}">Application Number: ${arr[0]}${arr[1]}${arr[2]}</a>/en</li>`;
+    body += `<li><a href="${url}">Application Number: ${arr[0]}${arr[1]}${arr[2]}</a></li>`;
   });
 
   body += `</ul>
