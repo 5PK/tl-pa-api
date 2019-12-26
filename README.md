@@ -1,4 +1,4 @@
-# Techlink Patent Alert API
+# Patent Alert API
 
 This is a Node API written for Techlink. The application is a CRM with email alerting functionality. This application serves API endpoints for a SPA to interface with.
 
